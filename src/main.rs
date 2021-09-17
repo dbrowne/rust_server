@@ -1,14 +1,22 @@
 use std::thread;
 use std::net::{TcpListener, TcpStream, Shutdown};
 use std::io::{Read, Write};
+use std::str;
 
 fn handle_client(mut stream: TcpStream) {
-    const K_SIZE :usize = 1024;
-    let mut data = [0 as u8;K_SIZE]; //50 byte buffer
+    const K_BUF_SIZE: usize = 1024;
+    let mut data = [0 as u8;K_BUF_SIZE];
     while match stream.read(&mut data) {
         Ok(size) => {
-            // dump the data
-            stream.write(&data[0..size]).unwrap();
+            if(size>0) {
+                println!("{}", str::from_utf8(&data[..size]).unwrap());
+
+                // dump the data
+                stream.write_all(&data[0..size]).unwrap();
+                stream.flush();
+
+                println!("sent data! {} bytes", size);
+            }
             true
         },
         Err(_) => {
