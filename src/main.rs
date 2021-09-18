@@ -9,8 +9,8 @@ fn handle_client(mut stream: TcpStream) {
     let mut data = [0 as u8;K_BUF_SIZE];
     while match stream.read(&mut data) {
         Ok(size) => {
-            if(size>0) {
-                println!("{}: {}",Utc::now(), str::from_utf8(&data[..size]).unwrap());
+            if size>0 {
+                println!("{}: RECEIVED: {}",Utc::now(), str::from_utf8(&data[..size]).unwrap());
 
                 // dump the data
                 match stream.write(&data[0..size]){
@@ -47,7 +47,7 @@ fn main() {
     for stream in listener.incoming() {
         match stream {
             Ok(stream) => {
-                println!("{}: New connection: {}",Utc::now(), stream.peer_addr().unwrap());
+                println!("\n{}: New connection: {}",Utc::now(), stream.peer_addr().unwrap());
                 thread::spawn(move || {
                     // connection succeeded
                     handle_client(stream)
