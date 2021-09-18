@@ -2,6 +2,7 @@ use std::thread;
 use std::net::{TcpListener, TcpStream, Shutdown};
 use std::io::{Read, Write};
 use std::str;
+use chrono::Utc;
 
 fn handle_client(mut stream: TcpStream) {
     const K_BUF_SIZE: usize = 1024;
@@ -9,13 +10,25 @@ fn handle_client(mut stream: TcpStream) {
     while match stream.read(&mut data) {
         Ok(size) => {
             if(size>0) {
-                println!("{}", str::from_utf8(&data[..size]).unwrap());
+                println!("{}: {}",Utc::now(), str::from_utf8(&data[..size]).unwrap());
 
                 // dump the data
-                stream.write_all(&data[0..size]).unwrap();
-                stream.flush();
+                match stream.write(&data[0..size]){
+                    Ok(n) => {
+                        println!("{}: wrote {} bytes",Utc::now(), n);
+                    },
+                    Err(e) =>{
+                        println!("{}: can't write data!  {}",Utc::now(), e);
+                    }
+                }
+                match stream.flush(){
+                    Ok(_) =>{},
+                    Err(e) =>{
+                        println!("{}: can't flush {}",Utc::now(),e);
+                    }
+                }
 
-                println!("sent data! {} bytes", size);
+                println!("{}: sent data! {} bytes",Utc::now(), size);
             }
             true
         },
@@ -30,11 +43,11 @@ fn handle_client(mut stream: TcpStream) {
 fn main() {
     let listener = TcpListener::bind("0.0.0.0:3333").unwrap();
     // new thread for each new connection
-    println!("Server is listening on port 3333");
+    println!("{}: Server is listening on port 3333",Utc::now());
     for stream in listener.incoming() {
         match stream {
             Ok(stream) => {
-                println!("New connection: {}", stream.peer_addr().unwrap());
+                println!("{}: New connection: {}",Utc::now(), stream.peer_addr().unwrap());
                 thread::spawn(move || {
                     // connection succeeded
                     handle_client(stream)
