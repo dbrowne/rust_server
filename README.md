@@ -35,7 +35,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/dbrowne/rust_server.git">
-    <img src="images/riding.png" alt="Logo" width="80" height="80">
+    <img src="Images/riding.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Rust TCP Server</h3>
