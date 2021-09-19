@@ -34,7 +34,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/dbrowne/rust_Server.git">
+  <a href="https://github.com/dbrowne/rust_server.git">
     <img src="images/riding.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -165,7 +165,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Dwight J. Browne - [@dwightb2](https://twitter.com/dwightb2) - dwight[-dot-]browne[-at-]colorado[-dot-]edu
 
-Project Link: [https://github.com/dbrowne/rust_Server.git](https://github.com/dbrowne/rust_Server.git)
+Project Link: [https://github.com/dbrowne/rust_server.git](https://github.com/dbrowne/rust_server.git)
 
 
 
