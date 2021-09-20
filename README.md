@@ -118,6 +118,12 @@ To get a local copy up and running follow these simple steps.
    ./target/release/rust_server [OPTIONS]
 
    ```
+3. Alternatively
+``` sh
+    cargo built --release
+    export SERVER_PORT=7769
+    cargo run
+```
 
 <!-- USAGE EXAMPLES -->
 
