@@ -66,13 +66,14 @@ fn main() {
     let env_port = env::var("SERVER_PORT").unwrap_or(K_PORT.to_string());
     // see if we have any input args
     let args: Vec<String> = env::args().collect();
+
     if args.len() > 1 {
         println!("Have input args: Overriding default  vars with the following:");
         println!("{:#?}", &opt);
         _port = opt.port;
     } else {
-        println!("Have input args: Overriding Env vars with the following:");
-        println!("{:#?}", &opt);
+        println!("Using environment vars: with the following values");
+        println!("port: SERVER_PORT    {}",env_port);
         _port = env_port.parse::<i32>().unwrap();
     }
 
