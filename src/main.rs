@@ -14,6 +14,8 @@ use std::str;
 use std::thread;
 use chrono::Utc;
 use structopt::StructOpt;
+use git_version::git_version;
+
 
 fn handle_client(mut stream: TcpStream) {
     const K_BUF_SIZE: usize = 1024;
@@ -54,6 +56,7 @@ fn handle_client(mut stream: TcpStream) {
 fn main() {
     const K_PORT: &str = "3333";
     const K_IP: &str = "0.0.0.0";
+    const K_GIT_VERSION: &str = git_version!();
     // check for command line args
     #[derive(StructOpt, Debug)]
     #[structopt(rename_all = "kebab-case")]
@@ -74,6 +77,7 @@ fn main() {
     // see if we have any input args
     let args: Vec<String> = env::args().collect();
 
+    println!("This is version {}",K_GIT_VERSION);
     if args.len() > 1 {
         println!("Have input args: Overriding default  vars with the following:");
         println!("{:#?}", &opt);
@@ -88,6 +92,7 @@ fn main() {
     }
 
     let bind_string = format!("{}:{}",&_ip_addr, &_port);
+
     let listener = TcpListener::bind(&bind_string).unwrap();
     // new thread for each new connection
     println!("{}: Server is listening {}", Utc::now(), &bind_string);
