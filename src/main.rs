@@ -3,6 +3,7 @@
 //! Will either accept arguments from the command line or ENV vars
 //! -p  port #
 //! SERVER_PORT
+//! SERVER_IP
 //!
 
 
@@ -52,18 +53,24 @@ fn handle_client(mut stream: TcpStream) {
 
 fn main() {
     const K_PORT: &str = "3333";
+    const K_IP: &str = "0.0.0.0";
     // check for command line args
     #[derive(StructOpt, Debug)]
     #[structopt(rename_all = "kebab-case")]
     struct Opt {
         #[structopt(default_value = K_PORT, short)]
         port: i32,
+        #[structopt(default_value = K_IP, short)]
+        ip: String,
     }
 
     let opt = Opt::from_args();
     let _port: i32;
+    let _ip_addr: &str;
     // check for environment variables
     let env_port = env::var("SERVER_PORT").unwrap_or(K_PORT.to_string());
+    let env_ip = env::var("SERVER_IP").unwrap_or(K_IP.to_string());
+
     // see if we have any input args
     let args: Vec<String> = env::args().collect();
 
@@ -71,13 +78,16 @@ fn main() {
         println!("Have input args: Overriding default  vars with the following:");
         println!("{:#?}", &opt);
         _port = opt.port;
+        _ip_addr = &opt.ip;
     } else {
         println!("Using environment vars: with the following values");
         println!("port: SERVER_PORT    {}",env_port);
+        println!("ip addr: SERVER_IP {}",env_ip);
         _port = env_port.parse::<i32>().unwrap();
+        _ip_addr = &*env_ip;
     }
 
-    let bind_string = format!("0.0.0.0:{}", &_port);
+    let bind_string = format!("{}:{}",&_ip_addr, &_port);
     let listener = TcpListener::bind(&bind_string).unwrap();
     // new thread for each new connection
     println!("{}: Server is listening {}", Utc::now(), &bind_string);
