@@ -19,7 +19,7 @@ use git_version::git_version;
 
 fn handle_client(mut stream: TcpStream) {
     const K_BUF_SIZE: usize = 1024;
-    const K_STRING: &str ="THIS IS THE FIRST TIME!!:--->";
+    const K_STRING: &str ="THIS IS tag version v1.1 . HMMM!:--->";
     let mut data = [0 as u8; K_BUF_SIZE];
     let mut odata = [0 as u8; K_BUF_SIZE];
     let byte_arr: Vec<u8> = K_STRING.as_bytes().to_vec();
