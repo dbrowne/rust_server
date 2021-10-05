@@ -19,14 +19,39 @@ use git_version::git_version;
 
 fn handle_client(mut stream: TcpStream) {
     const K_BUF_SIZE: usize = 1024;
+    const K_STRING: &str ="THIS IS THE FIRST TIME!!:--->";
     let mut data = [0 as u8; K_BUF_SIZE];
+    let mut odata = [0 as u8; K_BUF_SIZE];
+    let byte_arr: Vec<u8> = K_STRING.as_bytes().to_vec();
+    let mut ctr: usize = 0;
+    let b_iter = byte_arr.iter();
+    for val in b_iter {
+        odata[ctr] = *val;
+        ctr = ctr + 1;
+
+    }
+    let mut pos:usize = 0;
+
+    let offset:usize = byte_arr.len();
+    let mut idx = offset;
     while match stream.read(&mut data) {
         Ok(size) => {
             if size > 0 {
-                println!("{}: RECEIVED: {}", Utc::now(), str::from_utf8(&data[..size]).unwrap());
+                println!("{}: RECEIVED {} bytes: {}", Utc::now(), size,  str::from_utf8(&data[..size]).unwrap());
 
                 // dump the data
-                match stream.write(&data[0..size]) {
+                ctr = offset + size;
+                if ctr>=K_BUF_SIZE {
+                    ctr = K_BUF_SIZE;
+                }
+
+                while idx <ctr {
+                    odata[idx] = data[pos];
+                    idx += 1;
+                    pos +=1
+                }
+
+                match stream.write(&odata[0..ctr]) {
                     Ok(n) => {
                         println!("{}: wrote {} bytes", Utc::now(), n);
                     }
@@ -41,7 +66,7 @@ fn handle_client(mut stream: TcpStream) {
                     }
                 }
 
-                println!("{}: sent data! {} bytes", Utc::now(), size);
+                println!("{}: sent data! {} bytes", Utc::now(), ctr);
             }
             true
         }
